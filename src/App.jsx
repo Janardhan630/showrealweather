@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import backgroundImg from './weather.jpg'
 export default function App() {
+  const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [city, setCity] = useState("")
   const [weather, setWeather] = useState({})
@@ -11,7 +12,23 @@ export default function App() {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=2d53650153839110beb7bb45ebcf13a8&units=metric`)
       .then(res => res.json())
       // .then(json=>console.log(json.data))
-      .then(json => setWeather(json.main))
+      // .then(json => setWeather(json.main))
+      .then(json => {
+        const input = document.querySelector('.search-bar');
+        if (json.cod === "404") {
+          setError(true);
+          setWeather({});
+          if (input) {
+          input.classList.remove('shake'); // ✅ Remove class to restart animation
+          void input.offsetWidth;          // ✅ Force reflow
+          input.classList.add('shake');    // ✅ Add shake class
+        }
+        } else {
+          setError(false);
+          setWeather(json.main);
+        }
+      })
+      .catch(()=>setError(true));
   }
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -61,7 +78,9 @@ export default function App() {
         <div className='container'>
           <div className='inner-container'>
             <input
-            className='search-bar'
+            className={`search-bar ${error ? "error" : ""}`}
+
+            // className={'search-bar ${error ? "error" : ""}'}
             type="text"
             placeholder='Enter City Name'
             value={city}
