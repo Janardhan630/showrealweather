@@ -82,7 +82,7 @@ export default function App() {
 
             // className={'search-bar ${error ? "error" : ""}'}
             type="text"
-            placeholder='Enter City Name'
+            placeholder='Enter Your City Name'
             value={city}
             onChange={(e) => setCity(e.target.value)}
           /><br />
