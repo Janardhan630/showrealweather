@@ -86,7 +86,7 @@ export default function App() {
             value={city}
             onChange={(e) => setCity(e.target.value)}
           /><br />
-          <button className='search-bt' onClick={getWeather}>Search</button>
+          <button className='search-bt' onClick={getWeather}>Search Icon</button>
 
           {weather && (
             <div className='details'>
