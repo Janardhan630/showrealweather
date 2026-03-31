@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react'
-import backgroundImg from './weather.jpg'
 export default function App() {
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
