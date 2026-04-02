@@ -104,7 +104,7 @@ export default function App() {
         <div className='text-area'><textarea></textarea><br /><button className='text-sub-bt' onClick={handleSubmit}>Submit</button></div>
         <footer>
           <p>Call Us:&nbsp;&#9742;&nbsp;&nbsp;6304580822&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email Us:&nbsp;&#9993;&nbsp;&nbsp;vennelajanardhan4@gmail.com</p>
-          <a href='https://www.instagram.com'>Instagram</a>&nbsp;&nbsp;
+          <a href='https://www.instagram.com'>Instagram📷</a>&nbsp;&nbsp;
           <a href='https://www.whatsapp.com'>Whatspp</a>&nbsp;&nbsp;
           <a href='https://www.twitter.com'>Twitter</a>
         </footer>
