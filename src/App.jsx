@@ -7,6 +7,7 @@ export default function App() {
   const [city, setCity] = useState("")
   const [weather, setWeather] = useState({})
   const [report, setReport] = useState("");
+  const [reportToast, setReportToast] = useState({ open: false, message: "" });
   const dropdownRef = useRef(null);
   const getWeather = () => {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=2d53650153839110beb7bb45ebcf13a8&units=metric`)
@@ -42,6 +43,14 @@ export default function App() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (!reportToast.open) return;
+    const timer = setTimeout(() => {
+      setReportToast({ open: false, message: "" });
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [reportToast.open]);
+
   const handleClick = (item) => {
     setOpen(!open);
     const textArea = document.querySelector('.text-area');
@@ -61,10 +70,10 @@ export default function App() {
   }
   const handleSubmit = () => {
     const textArea = document.querySelector('.text-area');
-    const textareaField = textArea.querySelector('textarea');
+    const textareaField = textArea?.querySelector('textarea');
     if (textareaField) textareaField.value = ''; // clear textarea
     if (textArea) textArea.style.display = 'none'; // hide textarea
-    alert("Report Submitted");
+    setReportToast({ open: true, message: "Report submitted" });
     // // alert(`Report Submitted: ${report}`);
     // setReport(""); // clear textarea
     // setOpen(false); // close textarea
@@ -100,6 +109,19 @@ export default function App() {
           )}
           </div>
         </div>
+        {reportToast.open && (
+          <div className='report-toast' role="status" aria-live="polite">
+            <span className='report-toast__text'>{reportToast.message}</span>
+            <button
+              className='report-toast__close'
+              type="button"
+              onClick={() => setReportToast({ open: false, message: "" })}
+              aria-label="Close"
+            >
+              ×
+            </button>
+          </div>
+        )}
         <div className='#'><button className='help-bt' onClick={handleClick}></button></div>
         <div className='text-area'><textarea></textarea><br /><button className='text-sub-bt' onClick={handleSubmit}>Submit</button></div>
         <footer>
