@@ -6,17 +6,20 @@ export default function App() {
   const [open, setOpen] = useState(false);
   const [city, setCity] = useState("")
   const [weather, setWeather] = useState({})
-  const [report, setReport] = useState("");
+  const [searchHistory, setSearchHistory] = useState([]);
   const [reportToast, setReportToast] = useState({ open: false, message: "" });
   const dropdownRef = useRef(null);
-  const getWeather = () => {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=2d53650153839110beb7bb45ebcf13a8&units=metric`)
+  const getWeather = (cityToSearch = city) => {
+    const safeCity = typeof cityToSearch === "string" ? cityToSearch : city;
+    const trimmedCity = safeCity.trim();
+    if (!trimmedCity) return;
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${trimmedCity}&appid=2d53650153839110beb7bb45ebcf13a8&units=metric`)
       .then(res => res.json())
       // .then(json=>console.log(json.data))
       // .then(json => setWeather(json.main))
       .then(json => {
         const input = document.querySelector('.search-bar');
-        if (json.cod === "404") {
+        if (Number(json.cod) === 404) {
           setError(true);
           setWeather({});
           if (input) {
@@ -27,6 +30,11 @@ export default function App() {
         } else {
           setError(false);
           setWeather(json.main);
+          const locationLabel = json.name || trimmedCity;
+          setSearchHistory((prev) => {
+            const next = [locationLabel, ...prev.filter((item) => item.toLowerCase() !== locationLabel.toLowerCase())];
+            return next.slice(0, 8);
+          });
         }
       })
       .catch(()=>setError(true));
@@ -84,6 +92,29 @@ export default function App() {
     <>
       <div>
         <div className='background'></div>
+        <aside className='history-sidebar'>
+          <h3>Search History</h3>
+          {searchHistory.length === 0 ? (
+            <p className='history-empty'>No locations searched yet</p>
+          ) : (
+            <ul>
+              {searchHistory.map((item) => (
+                <li key={item}>
+                  <button
+                    type='button'
+                    className='history-item'
+                    onClick={() => {
+                      setCity(item);
+                      getWeather(item);
+                    }}
+                  >
+                    {item}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
         <div className='container'>
           <div className='inner-container'>
             <input
@@ -95,7 +126,7 @@ export default function App() {
             value={city}
             onChange={(e) => setCity(e.target.value)}
           /><br />
-          <button className='search-bt' onClick={getWeather}>Search Icon</button>
+          <button className='search-bt' onClick={() => getWeather()}>Search Icon</button>
 
           {weather && (
             <div className='details'>
