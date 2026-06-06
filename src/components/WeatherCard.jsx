@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function WeatherCard({ weather, unit, onToggleUnit }) {
+export default function WeatherCard({ weather, unit, onToggleUnit, isFavorite, onToggleFavorite }) {
   if (!weather) return null
 
   const { main, weather: conditions, wind, visibility, sys, name, timezone } = weather
@@ -30,15 +30,29 @@ export default function WeatherCard({ weather, unit, onToggleUnit }) {
             src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
             alt={desc}
           />
-          <div className="unit-switcher">
-            <button
-              className={`unit-btn${unit === 'C' ? ' unit-btn--active' : ''}`}
-              onClick={() => unit !== 'C' && onToggleUnit()}
-            >°C</button>
-            <button
-              className={`unit-btn${unit === 'F' ? ' unit-btn--active' : ''}`}
-              onClick={() => unit !== 'F' && onToggleUnit()}
-            >°F</button>
+          <div className="wc-controls">
+            <div className="unit-switcher">
+              <button
+                className={`unit-btn${unit === 'C' ? ' unit-btn--active' : ''}`}
+                onClick={() => unit !== 'C' && onToggleUnit()}
+              >°C</button>
+              <button
+                className={`unit-btn${unit === 'F' ? ' unit-btn--active' : ''}`}
+                onClick={() => unit !== 'F' && onToggleUnit()}
+              >°F</button>
+            </div>
+            {onToggleFavorite && (
+              <button
+                className={`fav-star-btn${isFavorite ? ' fav-star-btn--active' : ''}`}
+                onClick={onToggleFavorite}
+                aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                title={isFavorite ? 'Saved — click to remove' : 'Add to favorites'}
+              >
+                <svg viewBox="0 0 24 24" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </button>
+            )}
           </div>
         </div>
       </div>

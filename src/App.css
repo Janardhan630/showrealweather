@@ -1021,3 +1021,540 @@ a:hover { opacity: 0.75; }
   .search-btn__label    { display: none; }
   .app__greeting        { font-size: 1.25rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Favorite Locations Dashboard
+═══════════════════════════════════════════════════════════ */
+
+/* ── Tab navigation ───────────────────────────────────────── */
+.app__tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--card-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+  width: fit-content;
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: var(--radius);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--dur) var(--ease);
+}
+
+.tab-btn--active {
+  background: var(--card);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-btn:not(.tab-btn--active):hover {
+  color: var(--text-secondary);
+  background: rgba(128,128,128,0.08);
+}
+
+.tab-count {
+  background: var(--blue);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 7px;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── Favorite star button (inside WeatherCard) ────────────── */
+.wc-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fav-star-btn {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card-elevated);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--dur) var(--ease-spring);
+}
+
+.fav-star-btn svg { width: 16px; height: 16px; }
+
+.fav-star-btn:hover {
+  border-color: var(--warning);
+  color: var(--warning);
+  transform: scale(1.12) rotate(-5deg);
+}
+
+.fav-star-btn--active {
+  background: rgba(245,158,11,0.1);
+  border-color: rgba(245,158,11,0.5);
+  color: var(--warning);
+}
+
+.fav-star-btn--active:hover {
+  background: rgba(239,68,68,0.1);
+  border-color: var(--error);
+  color: var(--error);
+  transform: scale(1.1);
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
+.fav-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 64px 24px 80px;
+  gap: 14px;
+  animation: slide-up 0.35s var(--ease-out) both;
+}
+
+.fav-empty__icon {
+  font-size: 3.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 16px rgba(245,158,11,0.35));
+}
+
+.fav-empty__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.fav-empty__body {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 400px;
+  line-height: 1.7;
+}
+
+.fav-empty__hints {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.fav-hint {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 7px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur) var(--ease-spring), box-shadow var(--dur) var(--ease);
+}
+
+.fav-hint:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+/* ── Dashboard layout ─────────────────────────────────────── */
+.fav-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: slide-up 0.3s var(--ease-out) both;
+  width: 100%;
+}
+
+.fav-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fav-dashboard__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.fav-dashboard__subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.fav-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--dur) var(--ease);
+}
+
+.fav-refresh-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.fav-refresh-btn:hover:not(:disabled) {
+  border-color: var(--blue);
+  color: var(--blue);
+  box-shadow: var(--shadow), 0 0 0 3px var(--focus-ring);
+  transform: translateY(-1px);
+}
+
+.fav-refresh-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.fav-refresh-btn--spinning svg { animation: spin 0.8s linear infinite; }
+
+/* ── Insights ─────────────────────────────────────────────── */
+.fav-insights {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fav-insights__strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 1px 4px;
+}
+
+.fav-insights__strip::-webkit-scrollbar { display: none; }
+
+.insight-chip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 11px 16px;
+  min-width: 168px;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--dur) var(--ease-spring),
+    box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.insight-chip:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.insight-chip__icon { font-size: 1.35rem; line-height: 1; flex-shrink: 0; }
+
+.insight-chip__label {
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+  line-height: 1;
+}
+
+.insight-chip__value {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.insight-chip--hot   { border-left: 3px solid #EF4444; }
+.insight-chip--cold  { border-left: 3px solid #60A5FA; }
+.insight-chip--wind  { border-left: 3px solid #A78BFA; }
+.insight-chip--humid { border-left: 3px solid #34D399; }
+
+/* ── Stats bar ────────────────────────────────────────────── */
+.fav-stats {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.fav-stats::-webkit-scrollbar { display: none; }
+
+.fav-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 16px;
+  min-width: 72px;
+  flex-shrink: 0;
+}
+
+.fav-stat__n {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.fav-stat__l {
+  font-size: 0.61rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.fav-stat-divider {
+  width: 1px;
+  height: 30px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ── Card grid ────────────────────────────────────────────── */
+.fav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+/* ── Favorite card ────────────────────────────────────────── */
+.fav-card {
+  position: relative;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  cursor: grab;
+  user-select: none;
+  transition:
+    transform var(--dur) var(--ease-spring),
+    box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    opacity var(--dur) var(--ease),
+    background var(--dur-slow) var(--ease);
+  animation: slide-up 0.35s var(--ease-out) both;
+}
+
+.fav-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(37,99,235,0.45);
+}
+
+.fav-card:active  { cursor: grabbing; }
+
+.fav-card--dragging {
+  opacity: 0.38;
+  transform: scale(0.97) rotate(1deg);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px var(--blue);
+}
+
+.fav-card--drag-over {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--focus-ring), var(--shadow-lg);
+  transform: scale(1.02);
+}
+
+/* ── Card internals ───────────────────────────────────────── */
+.fav-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.fav-card__city-info { flex: 1; min-width: 0; }
+
+.fav-card__city {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fav-card__condition {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: capitalize;
+  margin-top: 2px;
+}
+
+.fav-card__top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.fav-card__icon { width: 54px; height: 54px; }
+
+.fav-card__remove {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card-elevated);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--dur) var(--ease);
+}
+
+.fav-card__remove svg { width: 11px; height: 11px; }
+
+.fav-card__remove:hover {
+  background: var(--error);
+  border-color: var(--error);
+  color: white;
+  transform: scale(1.15) rotate(90deg);
+}
+
+.fav-card__temp {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--text-primary);
+  margin: 10px 0 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fav-card__sym {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+
+.fav-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.fav-meta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.fav-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.fav-card__drag-hint,
+.fav-card__updated {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.fav-card__loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 18px;
+}
+
+.fav-card__spinner {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.fav-card__error {
+  font-size: 0.82rem;
+  color: var(--error);
+  padding: 14px 0;
+  text-align: center;
+}
+
+/* ── Smart badges ─────────────────────────────────────────── */
+.fav-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  margin-bottom: 2px;
+}
+
+.badge--hot   { background: rgba(239,68,68,0.1);   color: #EF4444; border: 1px solid rgba(239,68,68,0.22);   }
+.badge--cold  { background: rgba(96,165,250,0.1);  color: #3B82F6; border: 1px solid rgba(96,165,250,0.22);  }
+.badge--wind  { background: rgba(167,139,250,0.1); color: #8B5CF6; border: 1px solid rgba(167,139,250,0.22); }
+.badge--humid { background: rgba(52,211,153,0.1);  color: #10B981; border: 1px solid rgba(52,211,153,0.22);  }
+.badge--rainy { background: rgba(59,130,246,0.1);  color: #2563EB; border: 1px solid rgba(59,130,246,0.22);  }
+.badge--clear { background: rgba(251,191,36,0.1);  color: #D97706; border: 1px solid rgba(251,191,36,0.22);  }
+
+/* ── Favorites responsive ─────────────────────────────────── */
+@media (max-width: 720px) {
+  .fav-grid { grid-template-columns: repeat(2, 1fr); }
+  .tab-btn  { padding: 7px 12px; font-size: 0.82rem; }
+}
+
+@media (max-width: 480px) {
+  .fav-grid       { grid-template-columns: 1fr; }
+  .fav-card__temp { font-size: 2.5rem; }
+  .insight-chip   { min-width: 148px; }
+}
