@@ -79,10 +79,14 @@ export default function WeatherCard({ weather, unit, onToggleUnit, isFavorite, o
           { icon: '⬇️', label: 'Low',         value: `${toDisplay(main.temp_min)}${symbol}` },
           { icon: '🌅', label: 'Sunrise',     value: cityTime(sys.sunrise) },
           { icon: '🌇', label: 'Sunset',      value: cityTime(sys.sunset) },
-        ].map(({ icon: ic, label, value }) => (
+          { icon: '🔆', label: 'UV Index',    value: '—', soon: true },
+        ].map(({ icon: ic, label, value, soon }) => (
           <div className="stat" key={label}>
             <span className="stat__icon">{ic}</span>
-            <span className="stat__label">{label}</span>
+            <span className="stat__label">
+              {label}
+              {soon && <span className="stat__soon">Soon</span>}
+            </span>
             <span className="stat__value">{value}</span>
           </div>
         ))}

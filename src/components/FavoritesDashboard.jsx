@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import FavoriteCard from './FavoriteCard'
 import FavoritesInsights, { analyzeFavorites } from './FavoritesInsights'
+import { addRipple } from '../utils/ripple'
 
 function EmptyState() {
   return (
@@ -72,8 +73,9 @@ export default function FavoritesDashboard({
           </p>
         </div>
         <button
-          className={`fav-refresh-btn${anyLoading ? ' fav-refresh-btn--spinning' : ''}`}
+          className={`fav-refresh-btn ripple-host${anyLoading ? ' fav-refresh-btn--spinning' : ''}`}
           onClick={onRefresh}
+          onMouseDown={addRipple}
           disabled={anyLoading}
           title="Refresh all locations"
         >

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { addRipple } from '../utils/ripple'
 
 export default function FeedbackPanel({ onSubmit }) {
   const [open, setOpen] = useState(false)
@@ -47,8 +48,9 @@ export default function FeedbackPanel({ onSubmit }) {
           />
           <p className="feedback-panel__hint">Ctrl + Enter to send</p>
           <button
-            className="feedback-panel__submit"
+            className="feedback-panel__submit ripple-host"
             onClick={handleSubmit}
+            onMouseDown={addRipple}
             disabled={!text.trim()}
           >
             Submit Report
@@ -56,8 +58,9 @@ export default function FeedbackPanel({ onSubmit }) {
         </div>
       )}
       <button
-        className={`feedback-btn${open ? ' feedback-btn--active' : ''}`}
+        className={`feedback-btn ripple-host${open ? ' feedback-btn--active' : ''}`}
         onClick={() => setOpen(o => !o)}
+        onMouseDown={addRipple}
         aria-label="Send a report"
         title="Send a report"
       >

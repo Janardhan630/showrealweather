@@ -1,11 +1,11 @@
 import React from 'react'
 
 const LEVELS = [
-  { label: 'Good',      color: '#00b894' },
-  { label: 'Fair',      color: '#fdcb6e' },
-  { label: 'Moderate',  color: '#e17055' },
-  { label: 'Poor',      color: '#d63031' },
-  { label: 'Very Poor', color: '#6c5ce7' },
+  { label: 'Good',      color: '#10B981' },
+  { label: 'Fair',      color: '#FBBF24' },
+  { label: 'Moderate',  color: '#F97316' },
+  { label: 'Poor',      color: '#EF4444' },
+  { label: 'Very Poor', color: '#7C3AED' },
 ]
 
 export default function AqiCard({ aqi }) {
