@@ -11,6 +11,8 @@ import HourlyStrip          from './components/HourlyStrip'
 import AqiCard              from './components/AqiCard'
 import WeatherTip           from './components/WeatherTip'
 import FavoritesDashboard   from './components/FavoritesDashboard'
+import AlertsCard           from './components/AlertsCard'
+import { addRipple }        from './utils/ripple'
 import './App.css'
 
 function getGreeting() {
@@ -154,6 +156,7 @@ export default function App() {
   return (
     <div className={`app theme-${theme}`}>
       <div className="app__bg" />
+      <div className="app__fx" />
 
       <main className="app__main">
 
@@ -162,7 +165,7 @@ export default function App() {
           <h1 className="app__greeting">
             Hello, there! {greeting.icon} {greeting.text}
           </h1>
-          <button className="mode-toggle" onClick={toggleMode} aria-label="Toggle dark/light mode">
+          <button className="mode-toggle ripple-host" onClick={toggleMode} onMouseDown={addRipple} aria-label="Toggle dark/light mode">
             {mode === 'dark' ? (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="5"/>
@@ -184,8 +187,9 @@ export default function App() {
         {/* ── Tab navigation ──────────────────────────────── */}
         <nav className="app__tabs">
           <button
-            className={`tab-btn${view === 'weather' ? ' tab-btn--active' : ''}`}
+            className={`tab-btn ripple-host${view === 'weather' ? ' tab-btn--active' : ''}`}
             onClick={() => setView('weather')}
+            onMouseDown={addRipple}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 15, height: 15 }}>
               <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
@@ -193,8 +197,9 @@ export default function App() {
             Weather
           </button>
           <button
-            className={`tab-btn${view === 'favorites' ? ' tab-btn--active' : ''}`}
+            className={`tab-btn ripple-host${view === 'favorites' ? ' tab-btn--active' : ''}`}
             onClick={() => setView('favorites')}
+            onMouseDown={addRipple}
           >
             <svg viewBox="0 0 24 24" fill={view === 'favorites' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 15, height: 15 }}>
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -244,6 +249,7 @@ export default function App() {
                   <HourlyStrip hourly={hourly} unit={unit} />
                   <ForecastStrip forecast={forecast} unit={unit} />
                   <AqiCard aqi={aqi} />
+                  <AlertsCard />
                 </>
               )}
 

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react'
+import { addRipple } from '../utils/ripple'
 
 export default function SearchBar({ value, onChange, onSearch, onGeolocate, error, loading }) {
   const inputRef = useRef(null)
@@ -29,7 +30,7 @@ export default function SearchBar({ value, onChange, onSearch, onGeolocate, erro
           aria-label="City name"
         />
       </div>
-      <button className="search-btn" onClick={onSearch} disabled={loading} aria-label="Search">
+      <button className="search-btn ripple-host" onClick={onSearch} onMouseDown={addRipple} disabled={loading} aria-label="Search">
         {loading ? <span className="spinner" /> : (
           <>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -39,7 +40,7 @@ export default function SearchBar({ value, onChange, onSearch, onGeolocate, erro
           </>
         )}
       </button>
-      <button className="geo-btn" onClick={onGeolocate} aria-label="Use my location" title="Use my location">
+      <button className="geo-btn ripple-host" onClick={onGeolocate} onMouseDown={addRipple} aria-label="Use my location" title="Use my location">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
           <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" strokeDasharray="3 4" strokeOpacity="0.5"/>

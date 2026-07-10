@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { geocode, fetchWeatherBundle, buildWeatherJson } from '../api/openMeteo'
 
-const KEY = import.meta.env.VITE_OWM_API_KEY
 const TTL  = 5 * 60 * 1000   // 5-minute cache TTL
 const LS_LIST  = 'srw-favorites'
 const LS_CACHE = 'srw-fav-cache'
@@ -34,11 +34,10 @@ export function useFavorites() {
     setErrors(e => { const n = { ...e }; delete n[city]; return n })
 
     try {
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${KEY}&units=metric`
-      )
-      if (!res.ok) throw new Error('City not found')
-      const data  = await res.json()
+      const geo = await geocode(city)
+      if (!geo) throw new Error('City not found')
+      const bundle = await fetchWeatherBundle(geo.lat, geo.lon)
+      const data  = buildWeatherJson(geo, bundle)
       const entry = { weather: data, fetchedAt: now }
       cacheRef.current = { ...cacheRef.current, [city]: entry }
       setCache(c => ({ ...c, [city]: entry }))

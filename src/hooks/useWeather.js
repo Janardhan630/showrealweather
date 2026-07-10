@@ -1,31 +1,8 @@
 import { useState, useCallback } from 'react'
-
-const BASE = 'https://api.openweathermap.org/data/2.5'
-
-function key() {
-  return import.meta.env.VITE_OWM_API_KEY
-}
-
-function parseForecast(list) {
-  const days = {}
-  list.forEach(item => {
-    const date = item.dt_txt.split(' ')[0]
-    const hour = item.dt_txt.split(' ')[1]
-    if (!days[date]) days[date] = item
-    if (hour === '12:00:00') days[date] = item
-  })
-  return Object.values(days).slice(0, 5)
-}
-
-async function fetchAqi(lat, lon) {
-  try {
-    const res = await fetch(`${BASE}/air_pollution?lat=${lat}&lon=${lon}&appid=${key()}`)
-    const json = await res.json()
-    return json.list?.[0] ?? null
-  } catch {
-    return null
-  }
-}
+import {
+  geocode, reverseGeocode, fetchWeatherBundle,
+  buildWeatherJson, buildHourly, buildForecast, fetchAqi,
+} from '../api/openMeteo'
 
 export function useWeather() {
   const [weather,  setWeather]  = useState(null)
@@ -35,11 +12,12 @@ export function useWeather() {
   const [loading,  setLoading]  = useState(false)
   const [error,    setError]    = useState(false)
 
-  const applyData = async (wJson, fJson) => {
+  const applyData = async (geo, data) => {
+    const wJson = buildWeatherJson(geo, data)
     setWeather(wJson)
-    setForecast(fJson?.list ? parseForecast(fJson.list) : [])
-    setHourly(fJson?.list ? fJson.list.slice(0, 8) : [])
-    const aqiData = await fetchAqi(wJson.coord.lat, wJson.coord.lon)
+    setForecast(buildForecast(data))
+    setHourly(buildHourly(data))
+    const aqiData = await fetchAqi(geo.lat, geo.lon)
     setAqi(aqiData)
     return wJson.name
   }
@@ -49,13 +27,8 @@ export function useWeather() {
     setLoading(true)
     setError(false)
     try {
-      const [wRes, fRes] = await Promise.all([
-        fetch(`${BASE}/weather?q=${encodeURIComponent(city)}&appid=${key()}&units=metric`),
-        fetch(`${BASE}/forecast?q=${encodeURIComponent(city)}&appid=${key()}&units=metric`),
-      ])
-      const wJson = await wRes.json()
-      const fJson = await fRes.json()
-      if (Number(wJson.cod) === 404) {
+      const geo = await geocode(city)
+      if (!geo) {
         setError(true)
         setWeather(null)
         setForecast([])
@@ -63,7 +36,8 @@ export function useWeather() {
         setAqi(null)
         return null
       }
-      return await applyData(wJson, fJson)
+      const data = await fetchWeatherBundle(geo.lat, geo.lon)
+      return await applyData(geo, data)
     } catch {
       setError(true)
       return null
@@ -76,13 +50,11 @@ export function useWeather() {
     setLoading(true)
     setError(false)
     try {
-      const [wRes, fRes] = await Promise.all([
-        fetch(`${BASE}/weather?lat=${lat}&lon=${lon}&appid=${key()}&units=metric`),
-        fetch(`${BASE}/forecast?lat=${lat}&lon=${lon}&appid=${key()}&units=metric`),
+      const [geo, data] = await Promise.all([
+        reverseGeocode(lat, lon),
+        fetchWeatherBundle(lat, lon),
       ])
-      const wJson = await wRes.json()
-      const fJson = await fRes.json()
-      return await applyData(wJson, fJson)
+      return await applyData(geo, data)
     } catch {
       setError(true)
       return null
